@@ -10,7 +10,11 @@
 //   file.textContent = name
 //   document.body.appendChild(file);
 // })
-const { shell } = require('electron');
+const { shell, remote } = require('electron');
+
+const systemPreferences = remote.systemPreferences;
+ console.log(remote, systemPreferences);
+
 const newLinkUrl = document.querySelector('#new-link-url');
 const newLinkSubmit = document.querySelector('.new-link-form--submit');
 const newLinkForm = document.querySelector('.new-link-form');
@@ -60,3 +64,9 @@ newLinkForm.addEventListener('submit', ()=>{
     .then(title => console.log(title))
     .catch( (error) => console.error(error))
 });
+
+window.addEventListener('load', ()=> {
+  if(systemPreferences.isDarkMode()) {
+    document.querySelector('link').href = 'styles-dark.css';
+  }
+})
