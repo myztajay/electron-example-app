@@ -10,12 +10,19 @@
 //   file.textContent = name
 //   document.body.appendChild(file);
 // })
-
+const { shell } = require('electron');
 const newLinkUrl = document.querySelector('#new-link-url');
 const newLinkSubmit = document.querySelector('.new-link-form--submit');
 const newLinkForm = document.querySelector('.new-link-form');
 const linkTemplate = document.querySelector('#link-template');
 const linksSection = document.querySelector('.links');
+
+linksSection.addEventListener('click', (event)=> {
+  if (event.target.href){
+    event.preventDefault();
+    shell.openExternal(event.target.href);
+  }
+})
 
 newLinkUrl.addEventListener('keyup', ()=>{
   newLinkSubmit.disabled = !newLinkUrl.validity.valid;
@@ -23,7 +30,7 @@ newLinkUrl.addEventListener('keyup', ()=>{
 
 const parser = new DOMParser()
 const parseResponse = (text) => parser.parseFromString(text, 'text/html');
-const findTitle = (nodes) => nodes.querySelector('title');
+const findTitle = (nodes) => nodes.querySelector('title').textContent;
 
 const addToPage = ({ title, url }) => {
 
@@ -49,7 +56,6 @@ newLinkForm.addEventListener('submit', ()=>{
     .then(parseResponse)
     .then(findTitle)
     .then(title => ({ title, url}))
-    .then(response => console.log(response) )
     .then(addToPage)
     .then(title => console.log(title))
     .catch( (error) => console.error(error))
